@@ -43,10 +43,14 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile
+          file: docker/Dockerfile.cpu
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VLLM_CPU_AVX512BF16=false
+            VLLM_CPU_AVX512VNNI=false
+            VLLM_CPU_DISABLE_AVX512=true
           cache-from: type=gha
           cache-to: type=gha,mode=max
